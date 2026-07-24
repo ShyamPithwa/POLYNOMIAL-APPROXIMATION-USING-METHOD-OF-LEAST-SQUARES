@@ -1,0 +1,34 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build MM Project",
+            "type": "shell",
+            "command": "C:\\MinGW\\bin\\g++.exe",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-g",
+                "${workspaceFolder}/factorizations.cpp",
+                "${workspaceFolder}/m1.cpp",
+                "${workspaceFolder}/MATRIX.cpp",
+                "${workspaceFolder}/NLA_FUNCTIONS.cpp",
+                // Path to your Eigen library
+                "-I",
+                "${workspaceFolder}/eigen-5.0.0/eigen-5.0.0",
+                // Output executable name
+                "-o",
+                "${workspaceFolder}/m1.exe"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true  // Set to true so this runs automatically on Ctrl+Shift+B
+            }
+        }
+    ]
+}
