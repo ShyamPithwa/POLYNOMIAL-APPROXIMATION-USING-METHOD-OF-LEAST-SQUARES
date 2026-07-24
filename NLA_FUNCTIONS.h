@@ -6,16 +6,21 @@
 
 Matrix MG_Schmidt(Matrix &A);
 
+Matrix vandermonde(const vector<double>& x, int degree);
 Matrix identity(int n);
+
+Matrix vectorToMatrix(const vector<double> &v);
 Matrix Sub_Matrix(const Matrix &A, int i1, int i2, int j3, int j4);
 void InsertSubMatrix(Matrix& A,const Matrix& sub,unsigned startRow,unsigned startCol);
 
+double tnorm(const Matrix& M);
 double tnorm(const vector<double>& a);
 double tnorm(Matrix &A, int k);
 
 vector<double> access_colunm(const Matrix &A, int k);
 void set_column(const Matrix &A, int k, const vector<double>& col);
 
+Matrix MV_multiplication(const Matrix &A, const vector<double> &v);
 vector<double> VS_Multiplication(const vector<double>& v, double k);
 double Dot_product(const vector<double>& Q,const vector<double>& P);
 Matrix VM_multiplication(const vector<double>& v,const Matrix& A);

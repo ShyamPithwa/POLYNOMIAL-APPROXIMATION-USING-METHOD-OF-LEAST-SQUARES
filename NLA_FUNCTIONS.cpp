@@ -4,8 +4,27 @@
 #include <cmath>
 #include <algorithm>
 using namespace std;
+// Helper functions
 
-// 2-NORM
+// 2-norm for matrix
+double tnorm(const Matrix &A)
+{
+    if (A.getCols() != 1)
+    {
+        throw invalid_argument("tnorm() expects a column vector.");
+    }
+
+    double sum = 0.0;
+
+    for (unsigned int i = 0; i < A.getRows(); i++)
+    {
+        sum += A(i, 0) * A(i, 0);
+    }
+
+    return sqrt(sum);
+}
+
+// 2-NORM for vector
 double tnorm(const vector<double> &a)
 {
   double n = a.size();
@@ -76,7 +95,7 @@ Matrix OuterProduct(const vector<double> &v, const Matrix &row)
 }
 
 // vector vector outer product
-Matrix OuterProduct(const vector<double> &a,const vector<double> &b)
+Matrix OuterProduct(const vector<double> &a, const vector<double> &b)
 {
   Matrix result(a.size(), b.size(), 0.0);
 
@@ -113,6 +132,28 @@ Matrix VM_multiplication(const vector<double> &v, const Matrix &A)
   return result;
 }
 
+// for multiplication of matrix with vector
+Matrix MV_multiplication(const Matrix &A, const vector<double> &v)
+{
+  if (v.size() != A.getCols())
+    throw invalid_argument("Dimension mismatch.");
+
+  Matrix result(A.getRows(), 1, 0.0);
+
+  for (int i = 0; i < A.getRows(); i++)
+  {
+    double sum = 0.0;
+
+    for (int j = 0; j < A.getCols(); j++)
+    {
+      sum += A(i, j) * v[j];
+    }
+
+    result(i, 0) = sum;
+  }
+
+  return result;
+}
 // For Multiplication of scalar to whole vector
 vector<double> VS_Multiplication(const vector<double> &v, double k)
 {
@@ -265,4 +306,36 @@ void InsertSubMatrix(Matrix &A, const Matrix &sub, unsigned startRow, unsigned s
       A(startRow + i, startCol + j) = sub(i, j);
     }
   }
+}
+
+// To construct vandermonde matrix
+// Add degree by considering highest degree of polynomial
+Matrix vandermonde(const vector<double> &x, int degree)
+{
+  Matrix V(x.size(), degree + 1, 0.0);
+
+  for (int i = 0; i < x.size(); i++)
+  {
+    double value = 1.0;
+    for (int j = 0; j <= degree; j++)
+    {
+      V(i, j) = value;
+      value *= x[i];
+    }
+  }
+
+  return V;
+}
+
+// vector to matrix
+Matrix vectorToMatrix(const vector<double> &v)
+{
+  Matrix M(v.size(), 1, 0.0);
+
+  for (int i = 0; i < v.size(); i++)
+  {
+    M(i, 0) = v[i];
+  }
+
+  return M;
 }

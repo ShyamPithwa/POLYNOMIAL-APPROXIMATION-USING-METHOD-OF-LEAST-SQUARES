@@ -21,5 +21,8 @@ public:
         return R;
     }
 };
-
+vector<double> back_substitution(const Matrix &R, const Matrix &b);
+vector<double> Polynomial_Approximator(const vector<double>& x,const vector<double> &y);
+void printPolynomial(const vector<double>& coeff);
+void readDataPoints(const char *fileName,vector<double> &x,vector<double> &y);
 #endif
