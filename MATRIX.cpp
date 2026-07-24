@@ -117,15 +117,15 @@ Matrix Matrix::operator+(Matrix &B)
 }
 
 // Subtraction of Two Matrices
-Matrix Matrix::operator-(Matrix &B)
+Matrix Matrix::operator-(const Matrix &B) const
 {
-    Matrix diff(m_colSize, m_rowSize, 0.0);
-    unsigned i, j;
-    for (i = 0; i < m_rowSize; i++)
+    Matrix diff(m_rowSize, m_colSize, 0.0);
+
+    for (unsigned i = 0; i < m_rowSize; i++)
     {
-        for (j = 0; j < m_colSize; j++)
+        for (unsigned j = 0; j < m_colSize; j++)
         {
-            diff(i, j) = this->m_matrix[i][j] - B(i, j);
+            diff(i, j) = (*this)(i, j) - B(i, j);
         }
     }
 

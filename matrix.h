@@ -30,7 +30,7 @@ public:
 
     // Matrix Operations
     Matrix operator+(Matrix &);
-    Matrix operator-(Matrix &);
+    Matrix operator-(const Matrix &) const;
     Matrix operator*(Matrix &);
     Matrix transpose();
 

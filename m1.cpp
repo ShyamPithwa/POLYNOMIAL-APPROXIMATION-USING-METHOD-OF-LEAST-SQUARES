@@ -11,29 +11,33 @@ int main()
     cout << "Householder QR Factorization\n";
     cout << "----------------------------\n";
 
-    cout << "Number of rows: ";
-    if (!(cin >> rows) || rows <= 0)
-    {
-        cout << "Please enter a positive whole number.\n";
-        return 1;
-    }
+    Matrix A("test.txt");
 
-    cout << "Number of columns: ";
-    if (!(cin >> cols) || cols <= 0)
-    {
-        cout << "Please enter a positive whole number.\n";
-        return 1;
-    }
-
-    Matrix A(rows, cols, 0.0);
-    A.input();
-
-    Matrix R = Householder_QR(A);
-
+    Householder_QR qr(A);
     cout << "\nInput matrix A:\n";
-    A.print();
     cout << "\nUpper-triangular matrix R:\n";
-    R.prettyPrint();
+    qr.R.prettyPrint();
+    qr.R.print();
+    cout<<"\nOrthogonal Matrix Q: \n";
+    qr.Q.print();
+    qr.Q.prettyPrint();
 
+    Matrix Z = (qr.Q)*(qr.R);
+    cout<<"QR product matrix: "<<endl;
+    Z.print();
+    cout<<"Orignial matrix : "<<endl;
+    A.print();
+
+    cout<<"Orthogonality check for Q: "<<endl;
+    Matrix k= qr.Q;
+    Matrix p=qr.Q.transpose();
+    Matrix i = k*p;
+    i.print();
+    i.prettyPrint();
+
+
+    cout<<"Approximating/making both look clean:"<<endl;
+    Z.prettyPrint();
+    A.prettyPrint();
     return 0;
 }

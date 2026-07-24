@@ -31,6 +31,16 @@ double tnorm(const Matrix &A, int k)
   return norm;
 }
 
+Matrix identity(int n)
+{
+  Matrix I(n, n, 0.0);
+
+  for (int i = 0; i < n; i++)
+    I(i, i) = 1.0;
+
+  return I;
+}
+
 // Function to access colunm
 vector<double> access_colunm(const Matrix &A, int k)
 {
@@ -59,6 +69,22 @@ Matrix OuterProduct(const vector<double> &v, const Matrix &row)
     for (unsigned j = 0; j < row.getCols(); j++)
     {
       result(i, j) = v[i] * row(0, j);
+    }
+  }
+
+  return result;
+}
+
+// vector vector outer product
+Matrix OuterProduct(const vector<double> &a,const vector<double> &b)
+{
+  Matrix result(a.size(), b.size(), 0.0);
+
+  for (unsigned i = 0; i < a.size(); i++)
+  {
+    for (unsigned j = 0; j < b.size(); j++)
+    {
+      result(i, j) = a[i] * b[j];
     }
   }
 
