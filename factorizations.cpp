@@ -1,6 +1,7 @@
 #include "factorizations.h"
 #include "NLA_FUNCTIONS.h"
 #include <iostream>
+#include<cfloat>
 #include <algorithm>
 
 using namespace std;
@@ -76,6 +77,8 @@ vector<double> Polynomial_Approximator(const vector<double> &x, const vector<dou
     vector<double> bestCoeff;
     Matrix u = vectorToMatrix(y);
     vector<double> c;
+    double previousResidual = DBL_MAX; // from <cfloat>
+    double currentResidual = 0.0;
     int degree = 2;
     while (degree < x.size())
     {
@@ -88,17 +91,22 @@ vector<double> Polynomial_Approximator(const vector<double> &x, const vector<dou
         Matrix b = Qt * u;
         Matrix rhs = Sub_Matrix(b, 0, k - 1, 0, 0);
         c = back_substitution(R1, rhs);
-        cout << "Coefficients:\n";
-        for (double a : c)
-        {
-            cout << a << " ";
-            cout << endl;
-        }
         double r = 0;
         Matrix z = MV_multiplication(A, c) - u;
         r = tnorm(z) / tnorm(rhs);
+        currentResidual = r;
+         if(fabs(currentResidual-previousResidual) < 1e-8)
+        {
+            break;
+        }
+        else
+        {
+            previousResidual = currentResidual;
+        }
         cout << "Degree = " << degree
-             << "  Residual = " << r << endl;
+             << "  Residual Error = " << setprecision(9) << r << endl;
+        printPolynomial(c);
+        cout << endl;
         if (r < bestResidual)
         {
             bestResidual = r;
@@ -113,8 +121,10 @@ vector<double> Polynomial_Approximator(const vector<double> &x, const vector<dou
 
         degree++;
     }
+    cout << endl
+         << endl;
     cout << "Best Degree    : " << bestDegree << endl;
-    cout << "Residual Norm  : " << bestResidual << endl;
+    cout << "Residual Error : " << setprecision(9) << bestResidual << endl;
 
     return bestCoeff;
 }
