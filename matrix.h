@@ -1,6 +1,6 @@
 #pragma once
-#ifndef __EE_242_Project_2__matrix__
-#define __EE_242_Project_2__matrix__
+#ifndef _class_matrix__
+#define _class_matrix__
 
 #include <stdio.h>
 #include <fstream>
@@ -32,6 +32,8 @@ public:
     Matrix operator+(Matrix &);
     Matrix operator-(const Matrix &) const;
     Matrix operator*(Matrix &);
+    Matrix operator*(const Matrix &B) const;
+
     Matrix transpose();
 
     void input();

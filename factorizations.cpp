@@ -6,6 +6,33 @@
 
 using namespace std;
 
+LU_Decomposition::LU_Decomposition(const Matrix &A)
+    : L(identity(A.getRows())), U(A)
+{
+    int n = A.getRows();
+
+    for (int k = 0; k < n - 1; k++)
+    {
+        for (int i = k + 1; i < n; i++)
+        {
+            if (fabs(U(k, k)) < 1e-12)
+            {
+                throw runtime_error("LU decomposition failed: zero pivot element.");
+            }
+
+            double factor = U(i, k) / U(k, k);
+            L(i, k) = factor;
+
+            for (int j = k; j < n; j++)
+            {
+                U(i, j) -= factor * U(k, j);
+            }
+        }
+    }
+}
+
+
+
 Householder_QR::Householder_QR(const Matrix &A)
     : R(A), Q(identity(A.getRows()))
 {
@@ -13,7 +40,7 @@ Householder_QR::Householder_QR(const Matrix &A)
     int n = A.getCols();
     int m = A.getRows();
 
-    for (int i = 0; i < std::min(m - 1, n); i++)
+    for (int i = 0; i < min(m - 1, n); i++)
     {
         Matrix H = identity(m);
         Matrix A_sub = Sub_Matrix(R, i, m - 1, i, n - 1);
@@ -45,6 +72,8 @@ Householder_QR::Householder_QR(const Matrix &A)
     }
 }
 
+
+
 vector<double> back_substitution(const Matrix &R, const Matrix &b)
 {
     int n = R.getCols();
@@ -70,7 +99,9 @@ vector<double> back_substitution(const Matrix &R, const Matrix &b)
     return x;
 }
 
-vector<double> Polynomial_Approximator(const vector<double> &x, const vector<double> &y)
+
+
+vector<double> Polynomial_Approximator_QR(const vector<double> &x, const vector<double> &y)
 {
     double bestResidual = numeric_limits<double>::max();
     int bestDegree = 2;
@@ -129,6 +160,83 @@ vector<double> Polynomial_Approximator(const vector<double> &x, const vector<dou
     return bestCoeff;
 }
 
+
+
+MGS_QR::MGS_QR(const Matrix &A)
+    : R(A), Q(identity(A.getRows()))
+{
+    int n = A.getCols();
+    int m = A.getRows();
+
+    Q = MG_Schmidt(A);
+    R = Q.transpose() * A;
+}
+
+
+
+vector<double> Polynomial_Approximator_MGS(const vector<double> &x, const vector<double> &y)
+{
+    double bestResidual = numeric_limits<double>::max();
+    int bestDegree = 2;
+    vector<double> bestCoeff;
+    Matrix u = vectorToMatrix(y);
+    vector<double> c;
+    double previousResidual = DBL_MAX;
+    double currentResidual = 0.0;
+    int degree = 2;
+    while (degree < x.size())
+    {
+        const double tolerance = 1e-6;
+        Matrix A = vandermonde(x, degree);
+        MGS_QR qr(A);
+        Matrix Q=qr.getQ();
+        Matrix R=qr.getR();
+        int k = degree + 1;
+        Matrix R1 = Sub_Matrix(R, 0, k - 1, 0, k - 1);
+        Matrix Qt = Q.transpose();
+        Matrix b = Qt * u;
+        Matrix rhs = Sub_Matrix(b, 0, k - 1, 0, 0);
+        c = back_substitution(R1, rhs);
+        double r = 0;
+        Matrix z = MV_multiplication(A, c) - u;
+        r = tnorm(z) / tnorm(rhs);
+        currentResidual = r;
+         if(fabs(currentResidual-previousResidual) < 1e-8)
+        {
+            break;
+        }
+        else
+        {
+            previousResidual = currentResidual;
+        }
+        cout << "Degree = " << degree
+             << "  Residual Error = " << setprecision(9) << r << endl;
+        printPolynomial(c);
+        cout << endl;
+        if (r < bestResidual)
+        {
+            bestResidual = r;
+            bestDegree = degree;
+            bestCoeff = c;
+        }
+
+        if (r < tolerance)
+        {
+            break;
+        }
+
+        degree++;
+    }
+    cout << endl
+         << endl;
+    cout << "Best Degree    : " << bestDegree << endl;
+    cout << "Residual Error : " << setprecision(9) << bestResidual << endl;
+
+    return bestCoeff;
+}
+
+
+
 void printPolynomial(const vector<double> &coeff)
 {
     cout << "P(x) = ";
@@ -166,6 +274,8 @@ void printPolynomial(const vector<double> &coeff)
     cout << endl;
 }
 
+
+
 void readDataPoints(const char *fileName, vector<double> &x, vector<double> &y)
 {
     ifstream file(fileName);
@@ -190,3 +300,5 @@ void readDataPoints(const char *fileName, vector<double> &x, vector<double> &y)
         throw runtime_error("No data found in file.");
     }
 }
+
+

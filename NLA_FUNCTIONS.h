@@ -4,7 +4,7 @@
 
 #include "matrix.h"
 
-Matrix MG_Schmidt(Matrix &A);
+Matrix MG_Schmidt(const Matrix &A);
 
 Matrix vandermonde(const vector<double>& x, int degree);
 Matrix identity(int n);

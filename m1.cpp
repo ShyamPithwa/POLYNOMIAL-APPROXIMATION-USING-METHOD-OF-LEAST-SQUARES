@@ -10,6 +10,6 @@ int main()
   cout<<"\n ENTER DATA SET(txt file)\n";
   vector<double>x,y;
   readDataPoints("test.txt",x,y);
-  vector<double> c= Polynomial_Approximator(x,y);
+  vector<double> c= Polynomial_Approximator_QR(x,y);
   printPolynomial(c);
 }

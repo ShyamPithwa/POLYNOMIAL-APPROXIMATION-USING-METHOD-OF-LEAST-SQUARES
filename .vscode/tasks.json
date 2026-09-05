@@ -8,14 +8,16 @@
             "args": [
                 "-fdiagnostics-color=always",
                 "-g",
+
                 "${workspaceFolder}/factorizations.cpp",
                 "${workspaceFolder}/m1.cpp",
                 "${workspaceFolder}/MATRIX.cpp",
                 "${workspaceFolder}/NLA_FUNCTIONS.cpp",
-                // Path to your Eigen library
+                "${workspaceFolder}/eigne_approximators.cpp",
+
                 "-I",
-                "${workspaceFolder}/eigen-5.0.0/eigen-5.0.0",
-                // Output executable name
+                "C:\\Users\\Shyam\\OneDrive\\eigen-5.0.0\\eigen-5.0.0",
+
                 "-o",
                 "${workspaceFolder}/m1.exe"
             ],
@@ -27,7 +29,38 @@
             ],
             "group": {
                 "kind": "build",
-                "isDefault": true  // Set to true so this runs automatically on Ctrl+Shift+B
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Run Polynomial approximator using Modified Gram Schmidt",
+            "type": "shell",
+            "command":  "C:\\MinGW\\bin\\g++.exe",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-g",
+
+                "${workspaceFolder}/factorizations.cpp",
+                "${workspaceFolder}/MGS_APPROXIMATOR.cpp",
+                "${workspaceFolder}/MATRIX.cpp",
+                "${workspaceFolder}/NLA_FUNCTIONS.cpp",
+               
+
+                "-I",
+                "C:\\Users\\Shyam\\OneDrive\\eigen-5.0.0\\eigen-5.0.0",
+
+                "-o",
+                "${workspaceFolder}/MGS_APPROXIMATOR.exe"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
             }
         }
     ]
